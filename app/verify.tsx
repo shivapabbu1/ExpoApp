@@ -2,7 +2,7 @@ import * as Crypto from "expo-crypto";
 import React, { useState } from "react";
 import { Button, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
-const SECRET = "your-secret-key"; // 🔐 Use the same key used to generate the QR signature
+const SECRET = "shivapabbu-key";
 
 export default function QRManualVerifier() {
   const [input, setInput] = useState("");

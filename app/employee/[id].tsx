@@ -16,7 +16,7 @@ function generateNonce(length = 16) {
 }
 
 // Helper to generate signature
-async function generateSignature(payload, secret = "your-secret-key") {
+async function generateSignature(payload, secret = "shivapabbu-key") {
   const toSign = payload + secret;
   return await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
