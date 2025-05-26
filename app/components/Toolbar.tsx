@@ -9,7 +9,7 @@ export default function Toolbar() {
     <View style={styles.toolbar}>
       <Button title="Home" onPress={() => router.replace("/")} />
       <Button title="Employee List" onPress={() => router.replace("/main")} />
-      <Button title="Settings" onPress={() => router.replace("/settings")} />
+      <Button title="Verify" onPress={() => router.replace("/verify")} />
     </View>
   );
 }
