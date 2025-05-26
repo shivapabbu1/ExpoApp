@@ -3,16 +3,15 @@ import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Button, StyleSheet, Text, View } from "react-native";
 import QRCode from "react-native-qrcode-svg";
-import employees from "../data/employee.json"; // ✅ Import JSON data
+import employees from "../data/employee.json";
 
 // Helper to generate random nonce
-function generateNonce(length = 16) {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let nonce = "";
-  for (let i = 0; i < length; i++) {
-    nonce += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return nonce;
+function generateNonce(byteLength = 16) {
+  const bytes = Crypto.getRandomValues(new Uint8Array(byteLength));
+  // Convert bytes to base64
+  const base64 = btoa(String.fromCharCode(...bytes));
+  // Make it URL-safe
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
 // Helper to generate signature
