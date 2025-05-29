@@ -1,9 +1,22 @@
 import * as Crypto from "expo-crypto";
-import { useLocalSearchParams } from "expo-router";
+import * as Location from 'expo-location';
+import { Link, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Button, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Button, Pressable, StyleSheet, Text, View } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import employees from "../data/employee.json";
+
+async function getCurrentLocation() {
+  const { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== 'granted') {
+    throw new Error('Permission to access location was denied');
+  }
+  const location = await Location.getCurrentPositionAsync({});
+  return {
+    latitude: location.coords.latitude,
+    longitude: location.coords.longitude,
+  };
+}
 
 // Helper to generate random nonce
 function generateNonce(byteLength = 16) {
@@ -44,6 +57,10 @@ async function fetchQrPayloadFromServer(employee) {
 }
 
 export default function EmployeeDetailScreen() {
+  // Removed useCameraPermissions and isPermissonGranted from here
+  // const [Permission , requesPermission] = useCameraPermissions();
+  // const isPermissonGranted = Boolean(Permission?.granted);
+
   const { id } = useLocalSearchParams(); // URL param
   const employee = employees.find(emp => emp.id === id); // Find from JSON
   const [showQR, setShowQR] = useState(false);
@@ -118,6 +135,18 @@ export default function EmployeeDetailScreen() {
       {!showQR && expiresIn === 0 && qrPayload && (
         <Text style={styles.expiredText}>QR Code expired. Please generate a new one.</Text>
       )}
+
+      {/* Removed the camera permission request button from here */}
+      {/* <Pressable onPress={requesPermission}>
+       <Text> Request Permission</Text>
+      </Pressable> */}
+
+      {/* The Link to /verify will now always be enabled */}
+      <Link href={"/verify"} asChild>
+        <Pressable> {/* No more 'disabled' prop here */}
+          <Text>Scan Code</Text>
+        </Pressable>
+      </Link>
     </View>
   );
 }
