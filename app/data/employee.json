@@ -1,6 +1,32 @@
-
 [
-  { "id": "1", "name": "Alice Johnson", "contact": "555-1234", "email": "alice@example.com" },
-  { "id": "2", "name": "Bob Smith", "contact": "555-5678", "email": "bob@example.com" },
-  { "id": "3", "name": "Carol Lee", "contact": "555-8765", "email": "carol@example.com" }
+  {
+    "id": "EMP001",
+    "name": "John Smith",
+    "contact": "+1-555-0123",
+    "email": "john.smith@company.com"
+  },
+  {
+    "id": "EMP002", 
+    "name": "Sarah Johnson",
+    "contact": "+1-555-0124",
+    "email": "sarah.johnson@company.com"
+  },
+  {
+    "id": "EMP003",
+    "name": "Michael Brown",
+    "contact": "+1-555-0125", 
+    "email": "michael.brown@company.com"
+  },
+  {
+    "id": "EMP004",
+    "name": "Emily Davis",
+    "contact": "+1-555-0126",
+    "email": "emily.davis@company.com"
+  },
+  {
+    "id": "EMP005",
+    "name": "David Wilson",
+    "contact": "+1-555-0127",
+    "email": "david.wilson@company.com"
+  }
 ]

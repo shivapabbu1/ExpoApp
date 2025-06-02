@@ -1,48 +1,130 @@
-import { useRouter } from "expo-router";
-import React from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import employees from "./data/employee.json"; // Adjust the path based on your file structure
+import React, { useState } from 'react';
+import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import EmployeeCard from './components/EmployeeCard';
+import { Colors } from './constants/Colors';
+import employees from './data/employee.json';
+
+interface Employee {
+  id: string;
+  name: string;
+  contact: string;
+  email: string;
+}
 
 export default function MainScreen() {
-  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>(employees);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim() === '') {
+      setFilteredEmployees(employees);
+    } else {
+      const filtered = employees.filter(employee =>
+        employee.name.toLowerCase().includes(query.toLowerCase()) ||
+        employee.email.toLowerCase().includes(query.toLowerCase()) ||
+        employee.contact.includes(query) ||
+        employee.id.includes(query)
+      );
+      setFilteredEmployees(filtered);
+    }
+  };
+
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <Text style={styles.title}>Employee Directory</Text>
+      <Text style={styles.subtitle}>{filteredEmployees.length} employees</Text>
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search employees..."
+          placeholderTextColor={Colors.textLight}
+          value={searchQuery}
+          onChangeText={handleSearch}
+        />
+      </View>
+    </View>
+  );
+
+  const renderEmptyState = () => (
+    <View style={styles.emptyState}>
+      <Text style={styles.emptyStateIcon}>🔍</Text>
+      <Text style={styles.emptyStateTitle}>No employees found</Text>
+      <Text style={styles.emptyStateText}>
+        Try adjusting your search terms
+      </Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Employee List</Text>
-      <View style={styles.tableHeader}>
-        <Text style={styles.headerCell}>ID</Text>
-        <Text style={styles.headerCell}>Name</Text>
-        <Text style={styles.headerCell}>Contact</Text>
-        <Text style={styles.headerCell}>Email</Text>
-      </View>
       <FlatList
-        data={employees}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.tableRow}>
-            <Text style={styles.cell}>{item.id}</Text>
-            <Pressable
-              style={styles.nameCell}
-              onPress={() => router.push(`/employee/${item.id}`)}
-            >
-              <Text style={styles.link}>{item.name}</Text>
-            </Pressable>
-            <Text style={styles.cell}>{item.contact}</Text>
-            <Text style={styles.cell}>{item.email}</Text>
-          </View>
-        )}
+        data={filteredEmployees}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <EmployeeCard employee={item} />}
+        ListHeaderComponent={renderHeader}
+        ListEmptyComponent={renderEmptyState}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContainer}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: "#fff" },
-  title: { fontSize: 22, fontWeight: "bold", marginBottom: 12, alignSelf: "center" },
-  tableHeader: { flexDirection: "row", borderBottomWidth: 1, borderColor: "#ccc", paddingBottom: 6 },
-  headerCell: { flex: 1, fontWeight: "bold", fontSize: 14 },
-  tableRow: { flexDirection: "row", paddingVertical: 8, borderBottomWidth: 1, borderColor: "#f0f0f0" },
-  cell: { flex: 1, fontSize: 13 },
-  nameCell: { flex: 1 },
-  link: { color: "blue", textDecorationLine: "underline", fontSize: 13 },
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
+  listContainer: {
+    paddingBottom: 20,
+  },
+  header: {
+    padding: 20,
+    paddingBottom: 16,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: Colors.text,
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: Colors.textSecondary,
+    marginBottom: 20,
+  },
+  searchContainer: {
+    marginBottom: 8,
+  },
+  searchInput: {
+    backgroundColor: Colors.surface,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: Colors.text,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 40,
+  },
+  emptyStateIcon: {
+    fontSize: 48,
+    marginBottom: 16,
+  },
+  emptyStateTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: Colors.text,
+    marginBottom: 8,
+  },
+  emptyStateText: {
+    fontSize: 16,
+    color: Colors.textSecondary,
+    textAlign: 'center',
+  },
 });
